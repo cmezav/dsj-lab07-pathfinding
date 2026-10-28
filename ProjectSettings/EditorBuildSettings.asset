@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Lab07/Scenes/Lab07_Inicio.unity
     guid: f2b538cdaa199a446b9ff35ee18c98a4
+  - enabled: 1
+    path: Assets/Lab07/Scenes/Lab07_Laberinto.unity
+    guid: b4416e2c5d5320c4b9879277211ffda6
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
