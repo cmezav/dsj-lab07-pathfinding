@@ -6,6 +6,14 @@ public sealed class Lab07Game : MonoBehaviour
 {
     [Min(1f)] public float maxHealth = 100f;
     [Min(0f)] public float damagePerSecond = 18f;
+    [Header("Aviso visual de daño")]
+    [Range(0f, 0.8f)] public float wineOverlayOpacity = 0.38f;
+    [Min(0.1f)] public float overlayFadeSpeed = 2.5f;
+    [Header("Sacudida por proximidad")]
+    [Min(0.1f)] public float shakeStartsAt = 4f;
+    [Min(0.1f)] public float shakeMaxAt = 0.65f;
+    [Range(0f, 0.5f)] public float maxShake = 0.16f;
+    [Min(1f)] public float shakeFrequency = 17f;
 
     private float health;
     private bool finished;
@@ -13,6 +21,10 @@ public sealed class Lab07Game : MonoBehaviour
     private Collider2D playerCollider;
     private Collider2D[] enemyColliders;
     private Collider2D exitCollider;
+    private Transform cameraTransform;
+    private Vector3 cameraRestPosition;
+    private float overlayOpacity;
+    private bool touchingEnemy;
 
     private void Awake()
     {
@@ -27,17 +39,27 @@ public sealed class Lab07Game : MonoBehaviour
         };
         GameObject exit = GameObject.Find("Salida_Victoria");
         exitCollider = exit != null ? exit.GetComponent<Collider2D>() : null;
+        Camera camera = Camera.main;
+        if (camera != null)
+        {
+            cameraTransform = camera.transform;
+            cameraRestPosition = cameraTransform.position;
+        }
     }
 
     private void FixedUpdate()
     {
         if (finished || playerCollider == null) return;
+        touchingEnemy = false;
         foreach (Collider2D enemy in enemyColliders)
         {
             if (enemy == null || !enemy.enabled) continue;
             ColliderDistance2D contact = playerCollider.Distance(enemy);
             if (contact.isValid && contact.distance <= 0.05f)
+            {
+                touchingEnemy = true;
                 health = Mathf.Max(0f, health - damagePerSecond * Time.fixedDeltaTime);
+            }
         }
         if (health <= 0f) { EndGame(false); return; }
 
@@ -46,6 +68,39 @@ public sealed class Lab07Game : MonoBehaviour
             ColliderDistance2D exitContact = playerCollider.Distance(exitCollider);
             if (exitContact.isValid && exitContact.distance <= 0f) EndGame(true);
         }
+    }
+
+    private void Update()
+    {
+        float targetOpacity = !finished && touchingEnemy ? wineOverlayOpacity : 0f;
+        overlayOpacity = Mathf.MoveTowards(overlayOpacity, targetOpacity,
+            overlayFadeSpeed * Time.deltaTime);
+    }
+
+    private void LateUpdate()
+    {
+        if (cameraTransform == null) return;
+        float nearest = float.PositiveInfinity;
+        if (!finished)
+            foreach (Collider2D enemy in enemyColliders)
+                if (enemy != null && enemy.enabled)
+                    nearest = Mathf.Min(nearest,
+                        Vector2.Distance(transform.position, enemy.transform.position));
+
+        // Cero al estar lejos; aumenta gradualmente al acercarse.
+        float span = Mathf.Max(0.01f, shakeStartsAt - shakeMaxAt);
+        float proximity = Mathf.Clamp01((shakeStartsAt - nearest) / span);
+        float amplitude = maxShake * proximity * proximity;
+        if (amplitude <= 0.0001f)
+        {
+            cameraTransform.position = cameraRestPosition;
+            return;
+        }
+
+        float t = Time.unscaledTime * shakeFrequency;
+        float x = (Mathf.PerlinNoise(t, 13.7f) * 2f - 1f) * amplitude;
+        float y = (Mathf.PerlinNoise(23.1f, t) * 2f - 1f) * amplitude;
+        cameraTransform.position = cameraRestPosition + new Vector3(x, y, 0f);
     }
 
     private void EndGame(bool won)
@@ -57,11 +112,18 @@ public sealed class Lab07Game : MonoBehaviour
 
     private void OnDisable()
     {
+        if (cameraTransform != null) cameraTransform.position = cameraRestPosition;
         if (finished) Time.timeScale = 1f;
     }
 
     private void OnGUI()
     {
+        if (overlayOpacity > 0f)
+        {
+            GUI.color = new Color(0.42f, 0.015f, 0.075f, overlayOpacity);
+            GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), Texture2D.whiteTexture);
+            GUI.color = Color.white;
+        }
         float width = Mathf.Min(Screen.width - 32f, 290f);
         GUI.Box(new Rect(16f, 16f, width, 72f), "ESCAPA DEL LABERINTO");
         GUI.Label(new Rect(28f, 42f, width - 24f, 22f), "Vida: " + Mathf.CeilToInt(health) + " / " + Mathf.CeilToInt(maxHealth));
