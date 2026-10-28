@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     public float speed = 5f;
+    public float turnSpeed = 360f; // Grados por segundo
 
     private Rigidbody2D rb;
     private Vector2 direction;
@@ -17,10 +18,10 @@ public class PlayerScript : MonoBehaviour
     {
         direction = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) direction.x--;
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) direction.x++;
-        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) direction.y++;
-        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) direction.y--;
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) direction.x--;
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) direction.x++;
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) direction.y++;
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) direction.y--;
 
         direction.Normalize();
     }
@@ -28,5 +29,14 @@ public class PlayerScript : MonoBehaviour
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+
+        if (direction.sqrMagnitude > 0f)
+        {
+            float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            float nextAngle = Mathf.MoveTowardsAngle(
+                rb.rotation, targetAngle, turnSpeed * Time.fixedDeltaTime
+            );
+            rb.MoveRotation(nextAngle);
+        }
     }
 }
