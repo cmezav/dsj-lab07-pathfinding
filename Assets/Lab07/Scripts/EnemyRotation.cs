@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyRotation : MonoBehaviour
 {
     public float turnSpeed = 360f;
+    public float stopTurningDistance = 0.9f;
 
     private AIPath ai;
 
@@ -12,12 +13,22 @@ public class EnemyRotation : MonoBehaviour
     {
         ai = GetComponent<AIPath>();
         ai.enableRotation = false;
+
+        Rigidbody2D body = GetComponent<Rigidbody2D>();
+        if (body != null)
+            body.freezeRotation = true;
     }
 
     void LateUpdate()
     {
-        Vector2 direction = ai.velocity;
-        if (direction.sqrMagnitude < 0.01f) return;
+        Vector2 toTarget = (Vector2)(ai.destination - transform.position);
+        if (toTarget.sqrMagnitude <= stopTurningDistance * stopTurningDistance)
+            return;
+
+        Vector3 desired = ai.desiredVelocity;
+        Vector2 direction = new Vector2(desired.x, desired.y);
+        if (direction.sqrMagnitude < 0.04f)
+            return;
 
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         float angle = Mathf.MoveTowardsAngle(
