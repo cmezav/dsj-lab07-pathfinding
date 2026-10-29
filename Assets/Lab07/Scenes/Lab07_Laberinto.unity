@@ -3000,6 +3000,7 @@ GameObject:
   - component: {fileID: 743466960}
   - component: {fileID: 743466959}
   - component: {fileID: 743466966}
+  - component: {fileID: 743466967}
   m_Layer: 0
   m_Name: Enemy_2
   m_TagString: Untagged
@@ -3203,7 +3204,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4931749809310127945, guid: 522971e37670ebf46803969cb9bdef8c, type: 3}
+  m_Sprite: {fileID: 6498230030170714938, guid: bd8e7fe9a778d5f4191a323d8d1461bf, type: 3}
   m_Color: {r: 1, g: 0.3, b: 0.42, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3224,7 +3225,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.55, y: -6.6, z: -0.1}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -3241,6 +3242,19 @@ MonoBehaviour:
   m_Script: {fileID: 1665740784}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lab07EnemyMarker
+--- !u!114 &743466967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743466958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 964ab4054c8494f41970ef0326640876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyRotation
+  turnSpeed: 360
 --- !u!1 &744958614
 GameObject:
   m_ObjectHideFlags: 0
@@ -5203,6 +5217,7 @@ GameObject:
   - component: {fileID: 1136261372}
   - component: {fileID: 1136261375}
   - component: {fileID: 1136261376}
+  - component: {fileID: 1136261377}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -5295,7 +5310,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4931749809310127945, guid: 522971e37670ebf46803969cb9bdef8c, type: 3}
+  m_Sprite: {fileID: -4102030701566663702, guid: 5593a763f4cf9d04381f9c674d939895, type: 3}
   m_Color: {r: 1, g: 0.56, b: 0.22, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5316,7 +5331,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.55, y: 6.6, z: -0.1}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -5444,6 +5459,19 @@ MonoBehaviour:
   m_Script: {fileID: 1665740784}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lab07EnemyMarker
+--- !u!114 &1136261377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136261368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 964ab4054c8494f41970ef0326640876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyRotation
+  turnSpeed: 360
 --- !u!1 &1136534143
 GameObject:
   m_ObjectHideFlags: 0
@@ -8519,6 +8547,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Lab07Game
   maxHealth: 100
   damagePerSecond: 18
+  wineOverlayOpacity: 0.38
+  overlayFadeSpeed: 2.5
+  shakeStartsAt: 4
+  shakeMaxAt: 0.65
+  maxShake: 0.16
+  shakeFrequency: 17
 --- !u!1 &1744892690
 GameObject:
   m_ObjectHideFlags: 0
